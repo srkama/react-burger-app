@@ -1,0 +1,13 @@
+.contactDetailsForm {
+    display: block;
+    float: none;
+    width: 500px;
+    height: 220px;
+    margin: 20px auto;
+    background-color: lightcyan;
+}
+
+.contactDetailsInput button {
+    margin-top: 20px;
+    float: right; 
+}

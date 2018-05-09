@@ -1,0 +1,19 @@
+.order {
+    box-shadow: 17px 13px 61px -10px rgba(0,0,0,0.75);
+    border-radius: 10px 10px 10px 10px;
+    min-width: 300px;
+    height: 250px;
+    margin: 25px;
+    padding: 10px;
+    display: block;
+    text-align: center;
+}
+
+.order table {
+    width: 90%;
+    margin: 5px auto;
+}
+
+.priceAmount {
+    margin: 20px;
+}

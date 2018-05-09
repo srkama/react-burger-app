@@ -1,0 +1,45 @@
+.input input, select, label {
+    display:inline-block;
+    margin: 2px auto;
+    width: 90%;
+    height: 20px;
+    box-sizing: border-box;
+    padding: 2px;
+}
+.input label {
+    font-size: 12px;
+    width: 100%;
+}
+
+
+.input {
+    padding: 5px;
+    margin: auto;
+    margin-bottom: 5    px;
+    width: 90%;
+    display: block;
+    float: left;
+}
+
+.input div {
+    width: 50%;
+    display: inline-table;
+}
+
+.errorInput {
+    color: red;
+}
+
+.inValid {
+    background-color: #fda683;
+    border: 1px solid red;
+}
+
+span {
+    font-size:10px;
+    display: block;
+}
+
+.hide {
+    display: none
+}

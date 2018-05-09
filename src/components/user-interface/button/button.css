@@ -1,0 +1,49 @@
+button {
+    -moz-border-radius:7px;
+	-webkit-border-radius:7px;
+    border-radius:7px;
+    font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:15px 40px;
+    text-decoration:none;
+    margin: 3px;
+    display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+}
+
+.success {
+	background-color:#44c767;
+}
+.success:hover {
+	background-color:#5cbf2a;
+}
+.success:active, .cancel:active {
+	position:relative;
+	top:1px;
+}
+
+.cancel {
+    background-color: #ac2525;
+}
+
+.cancel:hover {
+    background-color: #c42c12;
+}
+
+
+button[disabled]:active, button[disabled],
+input[type="button"][disabled]:active,
+input[type="button"][disabled],
+input[type="submit"][disabled]:active,
+input[type="submit"][disabled] ,
+button[disabled]:hover,
+input[type="button"][disabled]:hover,
+input[type="submit"][disabled]:hover
+{
+  color: gray;
+  cursor: inherit;
+  background-color: #ddd;
+  background: #ddd;
+}

@@ -1,0 +1,17 @@
+
+.hambrugerMenu {
+    height: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+.hambrugerMenu img {
+    height: 80%;
+}
+
+@media (min-width: 500px) {
+    .hambrugerMenu {
+        display: none;
+    }
+}
