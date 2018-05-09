@@ -102,11 +102,13 @@ class ContactDetails extends Component {
     changeValue = (event,key) => {
         const modifiedDeliveryDetailsForm = {...this.state.deliveryDetailsForm}
         const modifiedElement = {...modifiedDeliveryDetailsForm[key]}
+        
         modifiedElement.value = event.target.value;
         modifiedElement.isFocused = true;
         modifiedElement.isValid = this.checkValidity(modifiedElement.value, modifiedElement.validationRules);
         modifiedDeliveryDetailsForm[key] = modifiedElement; 
         let isFormValid = true;
+
         this.setState({deliveryDetailsForm:modifiedDeliveryDetailsForm}, ()=>{
             _.forEach(this.state.deliveryDetailsForm,(config, key)=>{
                 isFormValid = config.isValid && config.isFocused && isFormValid;
