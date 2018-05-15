@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import querystring from 'query-string';
 import Aux from '../../components/hoc/aux';
@@ -9,6 +10,7 @@ import Button from '../../components/user-interface/button/Button';
 import classes from './burger-builder.css';
 import axiosInstance from '../../axios';
 import errorHandler from '../../components/hoc/errorHandler';
+import * as actions from '../../store/actions';
 
 
 
@@ -25,8 +27,6 @@ const BASE_PRICE = 3;
 class BugerBuilder extends Component {
 
     state = {
-        ingredients: [],
-        ingredientCount: {},
         totalCost: BASE_PRICE,
         purchaseStatus: 0,
         purchaseInProgress: false
@@ -99,7 +99,7 @@ class BugerBuilder extends Component {
 
     checkoutCart = () => {
         console.log(this.props);
-        this.props.history.push('/checkout?'+querystring.stringify(this.state.ingredientCount))
+        this.props.history.push('/checkout?'+querystring.stringify(this.props.ingredientCount))
     }
 
 
@@ -112,22 +112,22 @@ class BugerBuilder extends Component {
                                         orderCompleteAction={this.checkoutCart} 
                                         showAction={this.initiatePurchase} 
                                         closeAction={this.cancelPruchase} 
-                                        ingredients={this.state.ingredientCount}/> :
+                                        ingredients={this.props.ingredientCount}/> :
                                     null;
         return (
             <Aux>
-                <Burger ingredients={this.state.ingredients}/>
+                <Burger ingredients={this.props.ingredients}/>
                 <p className={classes.totalCost}> 
                     Total Price: Rs. {this.state.totalCost} 
                 </p>
                 <BuildControls 
-                    addIngredient={this.addIngredient} 
-                    removeIngredient={this.removeIngredient} 
-                    ingredientCount={this.state.ingredientCount}/>
+                    addIngredient={this.props.onAddIngredient} 
+                    removeIngredient={this.props.onRemoveIngredient} 
+                    ingredientCount={this.props.ingredientCount}/>
                 <div className={classes.orderButton}>
                     <Button type='success' 
                             clicked={this.initiatePurchase} 
-                            disabled={!this.state.ingredients.length}> Order Now </Button>
+                            disabled={!this.props.ingredients.length}> Order Now </Button>
                 </div>
                 {orderSummary}
             </Aux>
@@ -136,4 +136,18 @@ class BugerBuilder extends Component {
 
 }
 
-export default errorHandler(BugerBuilder, axiosInstance);
+const mapPropsToStates = state => {
+    return {
+        ingredients : state.ingredients,
+        ingredientCount: state.ingredientCount
+    }
+};
+
+const mapPropsToDispatches = dispatch => {
+    return {
+        onAddIngredient : (ingredientName) => dispatch({type:actions.ADD_INGREDIENT, ingredient:ingredientName}),
+        onRemoveIngredient : (ingredientName) => dispatch({type:actions.REMOVE_INGREDIENT, ingredient:ingredientName})
+    }   
+}
+
+export default connect(mapPropsToStates, mapPropsToDispatches)(errorHandler(BugerBuilder, axiosInstance));
