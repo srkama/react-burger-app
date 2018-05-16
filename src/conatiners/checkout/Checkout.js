@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import queryString from 'query-string';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import CheckoutSummary from '../../components/checkout-summary/CheckoutSummary';
 import Button from '../../components/user-interface/button/Button';
@@ -14,25 +14,15 @@ class Checkout extends Component {
         ingredients:{},
     }
 
-    componentWillMount() {
-        const parsedObject=queryString.parse(this.props.location.search)
-        this.setState({
-            ingredients: parsedObject
-        })
-    }
-
     proceedToContact() {
-        console.log(this.props);
         this.props.history.push(this.props.match.path+'/contact-details');
     }
 
 
     render() {
-        console.log(this.props.match.path+'/contact-details');
-        
         return(
             <div className={classes.checkout}>
-                <CheckoutSummary ingredients={this.state.ingredients}></CheckoutSummary>
+                <CheckoutSummary ingredients={this.props.burger}></CheckoutSummary>
                 <div className={classes.ctaSection}>
                     <Button type="cancel">
                         Cancel
@@ -41,11 +31,17 @@ class Checkout extends Component {
                         Proceed
                     </Button>
                 </div>
-                <Route path={this.props.match.path + '/contact-details'} exact render={()=><ContactDetails ingredient={this.state.ingredients}/>}/>
+                <Route path={this.props.match.path + '/contact-details'} exact component={ContactDetails}/>
             </div>
         )
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        burger: state.burger
+    }
+}
 
-export default Checkout;
+
+export default connect(mapStateToProps)(Checkout);

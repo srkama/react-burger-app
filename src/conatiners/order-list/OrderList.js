@@ -23,6 +23,7 @@ class OrderList extends Component {
                         key:obj
                     })
                 }
+                console.log(tempOrders)
                 this.setState({orders:tempOrders})
                 console.log(tempOrders);
             })

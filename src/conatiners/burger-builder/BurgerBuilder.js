@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import querystring from 'query-string';
 import Aux from '../../components/hoc/aux';
 import Burger from '../../components/burger/Burger';
 import BuildControls from '../../components/burger/build-controls/BuildControls';
@@ -13,32 +11,11 @@ import errorHandler from '../../components/hoc/errorHandler';
 import * as actions from '../../store/actions';
 
 
-
-
-const INGREDIENT_PRICES = {
-    'meat': 10,
-    'salad': 5,
-    'bacon': 4,
-    'cheese': 2
-};
-
-const BASE_PRICE = 3;
-
 class BugerBuilder extends Component {
 
     state = {
-        totalCost: BASE_PRICE,
         purchaseStatus: 0,
         purchaseInProgress: false
-    }
-
-    addIngredient = (ingredient) => {
-        const ingredients = [ingredient, ...this.state.ingredients];
-        const totalCost = this.state.totalCost + INGREDIENT_PRICES[ingredient];
-        this.setState ({
-            ingredients,
-            totalCost
-        }, this.getCountOfIngredients);
     }
 
     componentWillMount() {
@@ -64,26 +41,6 @@ class BugerBuilder extends Component {
             })
     }
 
-    removeIngredient = (ingredient) => {
-        let index = this.state.ingredients.indexOf(ingredient);
-        const ingredients = [...this.state.ingredients];
-        if (index > -1) {
-            const totalCost = this.state.totalCost - INGREDIENT_PRICES[ingredient];
-            ingredients.splice(index,1);
-            this.setState ({
-                ingredients,
-                totalCost
-            }, this.getCountOfIngredients);
-        }
-    }
-
-    getCountOfIngredients() {
-        const ingredientCount = _.countBy(this.state.ingredients);
-        this.setState({
-            ingredientCount
-        })
-    }
-
     initiatePurchase = () => {
         this.setState ({
             purchaseStatus: 1
@@ -99,7 +56,7 @@ class BugerBuilder extends Component {
 
     checkoutCart = () => {
         console.log(this.props);
-        this.props.history.push('/checkout?'+querystring.stringify(this.props.ingredientCount))
+        this.props.history.push('/checkout')
     }
 
 
@@ -118,7 +75,7 @@ class BugerBuilder extends Component {
             <Aux>
                 <Burger ingredients={this.props.ingredients}/>
                 <p className={classes.totalCost}> 
-                    Total Price: Rs. {this.state.totalCost} 
+                    Total Price: Rs. {this.props.totalCost} 
                 </p>
                 <BuildControls 
                     addIngredient={this.props.onAddIngredient} 
@@ -139,7 +96,8 @@ class BugerBuilder extends Component {
 const mapPropsToStates = state => {
     return {
         ingredients : state.ingredients,
-        ingredientCount: state.ingredientCount
+        ingredientCount: state.burger,
+        totalCost: state.totalCost
     }
 };
 

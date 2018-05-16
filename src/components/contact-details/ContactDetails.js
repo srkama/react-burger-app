@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { withRouter } from  'react-router-dom'
+import { withRouter } from  'react-router-dom';
+import { connect } from 'react-redux';
 import Button from '../user-interface/button/Button';
 import _ from 'lodash';
 import Input from '../user-interface/input/Input';
@@ -114,7 +115,7 @@ class ContactDetails extends Component {
                 isFormValid = config.isValid && config.isFocused && isFormValid;
             })
         });
-        this.setState({isFormValid});
+        this.setState({isFormValid});   
     }
 
     completePurchase = () => {
@@ -122,7 +123,8 @@ class ContactDetails extends Component {
         let deliveryDetails = {};
         _.forEach(this.state.deliveryDetailsForm, (config, key)=> deliveryDetails[key]=config.value);
         const order = {
-            burger:this.state.burger,
+            burger:this.props.burger,
+            totalCost: this.props.toalCost,
             deliveryDetails
         }
         axiosInstance.post('/orders.json', order)
@@ -166,5 +168,11 @@ class ContactDetails extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        burger:state.burger,
+        toalCost:state.toalCost
+    }
+}
 
-export default withRouter(ContactDetails);
+export default connect(mapStateToProps)(withRouter(ContactDetails));
