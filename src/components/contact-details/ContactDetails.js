@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { withRouter } from  'react-router-dom';
 import { connect } from 'react-redux';
 import Button from '../user-interface/button/Button';
 import _ from 'lodash';
 import Input from '../user-interface/input/Input';
 import classes from './contact-details.css'
+import { orderActions } from '../../store/actions/actions';
+import errorHandler from '../hoc/errorHandler';
 import axiosInstance from '../../axios';
 
 
@@ -15,7 +16,7 @@ class ContactDetails extends Component {
         deliveryDetailsForm: {
             name: {
                 elementType:'text',
-                value:'',
+                value:'kamal',
                 isValid: true,
                 isFocused:false,
                 options:{
@@ -29,7 +30,7 @@ class ContactDetails extends Component {
             },
             email: {
                 elementType:'text',
-                value:'text',
+                value:'kamal@gai.com',
                 isValid: true,
                 isFocused:false,
                 options:{
@@ -44,7 +45,7 @@ class ContactDetails extends Component {
             },
             phone: {
                 elementType:'text',
-                value:'',
+                value:'1234567832',
                 isValid: true,
                 isFocused:false,
                 options:{
@@ -95,11 +96,7 @@ class ContactDetails extends Component {
 
         return isValid;
     }
-
-    componentDidMount () {
-        this.setState({burger:this.props.ingredient})
-    }
-
+    
     changeValue = (event,key) => {
         const modifiedDeliveryDetailsForm = {...this.state.deliveryDetailsForm}
         const modifiedElement = {...modifiedDeliveryDetailsForm[key]}
@@ -115,31 +112,30 @@ class ContactDetails extends Component {
                 isFormValid = config.isValid && config.isFocused && isFormValid;
             })
         });
+
         this.setState({isFormValid});   
     }
 
     completePurchase = () => {
-        this.setState({orderState:1})
+
         let deliveryDetails = {};
         _.forEach(this.state.deliveryDetailsForm, (config, key)=> deliveryDetails[key]=config.value);
+
         const order = {
             burger:this.props.burger,
             totalCost: this.props.toalCost,
             deliveryDetails
         }
-        axiosInstance.post('/orders.json', order)
-            .then(response=>{
-                this.setState({orderState:2})
 
-                this.props.history.push("/")
-            }).catch(response=>{
-                this.setState({orderState:3})
-            });
+        this.props.purchaseBurger(order);
+
+        console.log("completeing the Purchase")
     }
 
     render() {
 
         let formElements = [];
+
         const formChangeValue = this.changeValue;
         _.forEach(this.state.deliveryDetailsForm, function(config, key) {
               formElements.push(
@@ -157,7 +153,7 @@ class ContactDetails extends Component {
                 {formElements}
                 <div className={classes.contactDetailsInput}>
                     <Button type="success" disabled={!this.state.isFormValid} className={classes.button_pay_cancel} clicked={this.completePurchase}>
-                        {this.state.orderState === 0 ? 'proceed to pay' : this.state.orderState === 1 ? 'Order in Process' : 'Order Success'}
+                        {this.props.purchaseStatus === 0 ? 'proceed to pay' : this.props.purchaseStatus === 1 ? 'Order in Process' : 'Order Success'}
                     </Button>
                     <Button type="cancel" className={classes.button_pay_cancel}>
                         Cancel                        
@@ -171,8 +167,15 @@ class ContactDetails extends Component {
 const mapStateToProps = state => {
     return {
         burger:state.burger,
-        toalCost:state.toalCost
+        toalCost:state.toalCost,
+        purchaseStatus:state.purchaseStatus
     }
 }
 
-export default connect(mapStateToProps)(withRouter(ContactDetails));
+const mapDispatchToProps = dispatch => {
+    return {
+        purchaseBurger: (order) => dispatch(orderActions.orderBurger(order))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(errorHandler(ContactDetails, axiosInstance));

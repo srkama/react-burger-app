@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as actions from './actions';
+import { actoinTypes } from '../actions/actions';
 
 
 const INGREDIENT_PRICES = {
@@ -14,7 +14,10 @@ const BASE_PRICE = 3;
 const initialState = {
     ingredients: [],
     burger:{},
-    totalCost:BASE_PRICE
+    totalCost:BASE_PRICE,
+    burgerIntializeError:false,
+    orderID:'',
+    purchaseStatus:'0'
 }
 
 
@@ -30,10 +33,9 @@ const burgerReducer = (state = initialState, action) => {
 
     switch (action.type) {
 
-        case actions.ADD_INGREDIENT:
+        case actoinTypes.ADD_INGREDIENT:
             let ingredients = [...state.ingredients, action.ingredient];
             let totalCost = state.totalCost + INGREDIENT_PRICES[action.ingredient];
-            console.log (totalCost)
             return {
                 ...state,
                 ingredients:ingredients,
@@ -41,10 +43,9 @@ const burgerReducer = (state = initialState, action) => {
                 totalCost
             }
 
-        case actions.REMOVE_INGREDIENT:
+        case actoinTypes.REMOVE_INGREDIENT:
             let index = state.ingredients.indexOf(action.ingredient);
             ingredients = [...state.ingredients];
-            console.log(index)
             totalCost = state.totalCost
             if (index !== -1) {
                 ingredients.splice(index,1)
@@ -58,6 +59,39 @@ const burgerReducer = (state = initialState, action) => {
                 burger:getCountOfIngredients(ingredients),
                 totalCost
             }
+        
+        case actoinTypes.INITIALIZE_INGREDIENTS:
+            return {
+                ...state,
+                ingredients: action.ingredients,
+                burger: action.burger,
+                purchaseStatus: 0
+            }
+
+        case actoinTypes.BURGER_INITIALIZE_ERROR:
+            return {
+                ...state,
+                burgerIntializeError: true
+            }
+
+        case actoinTypes.START_PURCHASE:
+            return {
+                ...state,
+                purchaseStatus: 1
+            }
+
+        case actoinTypes.PURCHASE_COMPLETED:
+            return {
+             ...state,
+             orderID:action.order,
+             purchaseStatus: 2
+            }
+        
+        case actoinTypes.PURCHASE_INIT:
+            return {
+                ...initialState
+            }
+
 
         default:
             return state

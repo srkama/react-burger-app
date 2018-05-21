@@ -13,7 +13,7 @@ class OrderList extends Component {
         orders:[]
     }
 
-    componentWillMount() {
+    componentDidMount() {
         let tempOrders = []
         axiosInstance.get('/orders.json')
             .then(response=>{

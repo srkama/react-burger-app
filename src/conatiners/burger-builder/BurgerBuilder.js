@@ -8,8 +8,7 @@ import Button from '../../components/user-interface/button/Button';
 import classes from './burger-builder.css';
 import axiosInstance from '../../axios';
 import errorHandler from '../../components/hoc/errorHandler';
-import * as actions from '../../store/actions';
-
+import { burgerActions } from '../../store/actions/actions';
 
 class BugerBuilder extends Component {
 
@@ -19,26 +18,7 @@ class BugerBuilder extends Component {
     }
 
     componentWillMount() {
-        axiosInstance.get('/ingredients.json')
-            .then(response=>{
-                console.log(response);
-                let ingredients = [];
-                ingredients = ingredients.concat.apply([],
-                    Object.keys(response.data).map((ingredient, key)=>{
-                        return Array(response.data[ingredient]).fill(ingredient);
-                    })
-                );
-                console.log(ingredients)
-
-                this.setState({
-                    ingredientCount: response.data,
-                    ingredients: ingredients
-                })
-            })
-            .catch(error=>{
-                console.log(error);
-                
-            })
+        this.props.initializeIngredients();
     }
 
     initiatePurchase = () => {
@@ -103,8 +83,9 @@ const mapPropsToStates = state => {
 
 const mapPropsToDispatches = dispatch => {
     return {
-        onAddIngredient : (ingredientName) => dispatch({type:actions.ADD_INGREDIENT, ingredient:ingredientName}),
-        onRemoveIngredient : (ingredientName) => dispatch({type:actions.REMOVE_INGREDIENT, ingredient:ingredientName})
+        onAddIngredient : (ingredientName) => dispatch(burgerActions.addIngredient(ingredientName)),
+        onRemoveIngredient : (ingredientName) => dispatch(burgerActions.removeIngredient(ingredientName)),
+        initializeIngredients: () => dispatch(burgerActions.initializeIngredients())
     }   
 }
 

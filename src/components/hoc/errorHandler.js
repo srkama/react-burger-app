@@ -9,7 +9,7 @@ const errorHandler = (WrappedComponent, axois) => {
             error: null
         }
 
-        componentDidMount() {
+        componentWillMount() {
             axois.interceptors.request.use(request=>{
                 this.setState({
                     error:null
@@ -36,7 +36,6 @@ const errorHandler = (WrappedComponent, axois) => {
         }
 
         render() {
-            console.log(this.props);
             return(
                 <Aux>
                     { this.showError() }
