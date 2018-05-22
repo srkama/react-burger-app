@@ -36,7 +36,6 @@ export const initializeIngredients = () => {
        axiosInstance.get('/ingredients.json')
         .then(response => {
             console.log(response);
-
             let ingredients = [];
             ingredients = ingredients.concat.apply([],
                 Object.keys(response.data).map((ingredient, key)=>{

@@ -17,7 +17,7 @@ class BugerBuilder extends Component {
         purchaseInProgress: false
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.initializeIngredients();
     }
 
@@ -54,6 +54,7 @@ class BugerBuilder extends Component {
         return (
             <Aux>
                 <Burger ingredients={this.props.ingredients}/>
+                <p>{this.props.error}</p>
                 <p className={classes.totalCost}> 
                     Total Price: Rs. {this.props.totalCost} 
                 </p>
