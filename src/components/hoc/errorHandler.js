@@ -9,11 +9,12 @@ const errorHandler = (WrappedComponent, axois) => {
             error: null
         }
 
-        componentWillMount() {
+        componentDidMount() {
+            console.log("Mounting Error handler")
+            this.setState({
+                error:null
+            })
             axois.interceptors.request.use(request=>{
-                this.setState({
-                    error:null
-                })
                 return request;
             });
             axois.interceptors.response.use(response=>{
@@ -23,6 +24,10 @@ const errorHandler = (WrappedComponent, axois) => {
                     error:error
                 })
             });
+        }
+
+        componentWillUnmount() {
+            console.log("Unmounting Error Handler")
         }
 
         showError() {
@@ -36,6 +41,7 @@ const errorHandler = (WrappedComponent, axois) => {
         }
 
         render() {
+            console.log
             return(
                 <Aux>
                     { this.showError() }

@@ -5,8 +5,10 @@ import _ from 'lodash';
 import Input from '../user-interface/input/Input';
 import classes from './contact-details.css'
 import { orderActions } from '../../store/actions/actions';
-import errorHandler from '../hoc/errorHandler';
+import withErrorHandler from 'error-handler-hoc';
 import axiosInstance from '../../axios';
+import errorFallback from '../../utils/errorFallback';
+import errorHandler from '../hoc/errorHandler';
 
 
 class ContactDetails extends Component {

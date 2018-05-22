@@ -19,7 +19,7 @@ export const orderBurger = (order) => {
     return dispatch => {
         dispatch(startPurchaseDispatcher())
         console.log(order);
-        axiosInstance.post("/order.json", order)
+        axiosInstance.post("/order.son", order)
             .then(response=>{
                 console.log(response)})
             .catch(error => {
