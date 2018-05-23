@@ -33,3 +33,39 @@ export const purchaseErrorDispatcher = () => {
     }
 }
 
+export const fetchOrderInitiateDispatcher = () => {
+    return {
+        type: actionTypes.INITIALIZE_FETCH_ORDERS
+    }
+}
+
+export const fetchOrderSuccessDispatcher = (orders) => {
+    return {
+        type: actionTypes.FETCH_ORDER_SUCCESS,
+        orders: orders
+    }
+}
+
+export const fetchOrderErrorDispatcher = () => {
+    return {
+        type: actionTypes.FETCH_ORDER_ERROR
+    }
+}
+
+export const fetchOrders = () => {
+    return dispatch => {
+        let tempOrders = []
+        dispatch(fetchOrderInitiateDispatcher());
+        axiosInstance.get('/orders.json')
+            .then(response=>{
+                for(var obj in response.data) {
+                    tempOrders.push({
+                        ...response.data[obj],
+                        key:obj
+                    })
+                }
+                dispatch(fetchOrderSuccessDispatcher(tempOrders));
+            })
+            .catch(error=>{dispatch(fetchOrderErrorDispatcher())});
+    }
+}

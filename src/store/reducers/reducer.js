@@ -17,14 +17,51 @@ const initialState = {
     totalCost:BASE_PRICE,
     burgerIntializeError:false,
     orderID:'',
-    purchaseStatus:'0'
+    purchaseStatus:0,
+    fetchOrderStatus:0,
+    orders:[]
 }
-
-
 
 const getCountOfIngredients = (ingredients) => {
     const burger = _.countBy(ingredients);
     return burger;
+}
+
+const removeIngreident = (state, action) => {
+    let index = state.ingredients.indexOf(action.ingredient);
+    let ingredients = [...state.ingredients];
+    let totalCost = state.totalCost
+    if (index !== -1) {
+        ingredients.splice(index,1)
+        totalCost = totalCost - INGREDIENT_PRICES[action.ingredient];
+    }
+    
+    return {
+        ...state,
+        ingredients: ingredients,
+        burger:getCountOfIngredients(ingredients),
+        totalCost
+    }
+};
+
+const addIngredient = (state, action) =>{
+    let ingredients = [...state.ingredients, action.ingredient];
+    let totalCost = state.totalCost + INGREDIENT_PRICES[action.ingredient];
+    return {
+        ...state,
+        ingredients:ingredients,
+        burger:getCountOfIngredients(ingredients), 
+        totalCost
+    }
+}
+
+const loadIngredients = (state, action) => {
+    return {
+        ...state,
+        ingredients: action.ingredients,
+        burger: action.burger,
+        purchaseStatus: 0
+    }
 }
 
 const burgerReducer = (state = initialState, action) => {
@@ -34,39 +71,13 @@ const burgerReducer = (state = initialState, action) => {
     switch (action.type) {
 
         case actoinTypes.ADD_INGREDIENT:
-            let ingredients = [...state.ingredients, action.ingredient];
-            let totalCost = state.totalCost + INGREDIENT_PRICES[action.ingredient];
-            return {
-                ...state,
-                ingredients:ingredients,
-                burger:getCountOfIngredients(ingredients), 
-                totalCost
-            }
+            return addIngredient(state, action);
 
         case actoinTypes.REMOVE_INGREDIENT:
-            let index = state.ingredients.indexOf(action.ingredient);
-            ingredients = [...state.ingredients];
-            totalCost = state.totalCost
-            if (index !== -1) {
-                ingredients.splice(index,1)
-                totalCost = totalCost - INGREDIENT_PRICES[action.ingredient];
-                console.log(ingredients)
-            }
-            
-            return {
-                ...state,
-                ingredients: ingredients,
-                burger:getCountOfIngredients(ingredients),
-                totalCost
-            }
+            return removeIngreident(state, action);
         
         case actoinTypes.INITIALIZE_INGREDIENTS:
-            return {
-                ...state,
-                ingredients: action.ingredients,
-                burger: action.burger,
-                purchaseStatus: 0
-            }
+            return loadIngredients(state, action);
 
         case actoinTypes.BURGER_INITIALIZE_ERROR:
             return {
@@ -82,9 +93,9 @@ const burgerReducer = (state = initialState, action) => {
 
         case actoinTypes.PURCHASE_COMPLETED:
             return {
-             ...state,
-             orderID:action.order,
-             purchaseStatus: 2
+                ...state,
+                orderID:action.order,
+                purchaseStatus: 2
             }
         
         case actoinTypes.PURCHASE_INIT:
@@ -92,7 +103,24 @@ const burgerReducer = (state = initialState, action) => {
                 ...initialState
             }
 
-
+        case actoinTypes.FETCH_ORDER_SUCCESS:
+            return {
+                ...state,
+                orders:action.orders,
+                fetchOrderStatus: 1
+            }
+        case actoinTypes.FETCH_ORDER_ERROR:
+            return {
+                ...state,
+                orders:[],
+                fetchOrderStatus: -1
+            }
+        case actoinTypes.INITIALIZE_FETCH_ORDERS:
+            return {
+                ...state,
+                orders: [],
+                fetchOrderStatus: 0
+            }
         default:
             return state
     }

@@ -42,7 +42,6 @@ class BugerBuilder extends Component {
 
 
     render() {
-        console.log(this.state);
         const orderSummary = this.state.purchaseStatus === 1 ? 
                                     <OrderSummary 
                                         purchaseInProgress={this.state.purchaseInProgress} 
@@ -51,6 +50,7 @@ class BugerBuilder extends Component {
                                         closeAction={this.cancelPruchase} 
                                         ingredients={this.props.ingredientCount}/> :
                                     null;
+                                    
         return (
             <Aux>
                 <Burger ingredients={this.props.ingredients}/>
