@@ -3,11 +3,11 @@ import classes from './order.css'
 
 const order = (props) => {
     const ingredients = Object.keys(props.order.burger);
-    console.log(ingredients);
+
     const ingredientsTable =  ingredients.map((ingredient, key)=>{
         return <tr key={key}><td>{ingredient}</td><td>{props.order.burger[ingredient]}</td></tr>
     });
-    console.log(ingredientsTable);
+    
     return (
         <div className={classes.order}>
             <table>

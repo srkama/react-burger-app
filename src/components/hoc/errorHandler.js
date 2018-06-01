@@ -3,44 +3,43 @@ import Aux from './aux';
 import Modal from '../user-interface/modal/Modal';
 
 
-const errorHandler = (WrappedComponent, axois) => {
+const errorHandler = (WrappedComponent, axios) => {
     return class  extends Component {
         state = {
             error: null
         }
 
-        componentDidMount() {
-            axois.interceptors.request.use(request=>{
-                this.setState({
-                    error:null
-                })
-                return request;
+        componentWillMount () {
+            this.reqInterceptor = axios.interceptors.request.use( req => {
+                this.setState( { error: null } );
+                return req;
+            } );
+            this.resInterceptor = axios.interceptors.response.use( res => res, error => {
+                this.setState( { error: error } );
             });
-            axois.interceptors.response.use(response=>{
-                return response;
-            }, error=>{
-                this.setState({
-                    error:error
-                })
-            });
+        }
+
+        componentWillUnmount () {
+            axios.interceptors.request.eject( this.reqInterceptor );
+            axios.interceptors.response.eject( this.resInterceptor );
         }
 
         showError() {
             if (this.state.error) {
                 return ( 
                     <Modal>
-                        {this.state.error.status} {this.state.error.message}
+                        <h1>{this.state.error.message}</h1>
                     </Modal>
+                    
                 )
             }
         }
 
         render() {
-            console.log(this.props);
             return(
                 <Aux>
                     { this.showError() }
-                    <WrappedComponent {...this.props}/>>
+                    <WrappedComponent {...this.props}/>
                 </Aux>
             )
         }
